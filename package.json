@@ -1,7 +1,7 @@
 {
-  "name": "my-vue-components",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@emiya/vue-component",
+  "version": "0.1.1",
+  "main": "lib/index.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -10,7 +10,9 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "ant-design-vue": "^1.4.11",
     "core-js": "^3.6.4",
+    "lodash": "^4.17.15",
     "vue": "^2.6.11"
   },
   "devDependencies": {
@@ -41,5 +43,13 @@
       "vue-cli-service lint",
       "git add"
     ]
-  }
+  },
+  "description": "## Project setup ``` yarn install ```",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "keywords": [],
+  "author": "emiya",
+  "license": "ISC"
 }
