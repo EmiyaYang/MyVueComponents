@@ -7,7 +7,7 @@ module.exports = {
   mode: "development",
   entry: componentsEntry,
   output: {
-    path: path.join(process.cwd(), "dist/"),
+    path: path.join(process.cwd(), "lib/"),
     // publicPath: "/dist/",
     filename: "[name]/index.js",
     library: "EVComponents", // 用 script 引入时挂载的变量

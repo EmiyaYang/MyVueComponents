@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import ProTable from "../dist/ProTable";
-import HelloWorld from "../dist/HelloWorld";
+import ProTable from "../lib/ProTable";
+import HelloWorld from "../lib/HelloWorld";
 
 export default {
   name: "App",

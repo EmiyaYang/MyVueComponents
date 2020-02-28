@@ -7,15 +7,15 @@ function isDir(dir) {
 }
 
 const json = {};
-const dir = path.join(__dirname, "../lib");
+const dir = path.join(__dirname, "../src/components");
 const files = fs.readdirSync(dir);
 files.forEach(file => {
   const absolutePath = path.join(dir, file);
   if (isDir(absolutePath)) {
-    json[file] = `./lib/${file}`;
+    json[file] = `./src/components/${file}`;
   }
 });
 
 module.exports = json;
 
-console.log(inspect(json));
+console.log("打包组件" + inspect(json));
