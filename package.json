@@ -1,6 +1,6 @@
 {
   "name": "@emiya/vue-component",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "main": "lib/index.js",
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -49,7 +49,12 @@
     "lib": "lib",
     "test": "tests"
   },
-  "keywords": [],
+  "keywords": [
+    "vueComponent",
+    "component",
+    "components",
+    "frontend"
+  ],
   "author": "emiya",
   "license": "ISC"
 }
