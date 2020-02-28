@@ -7,3 +7,5 @@ yarn.lock
 tests
 src
 public
+babel.config.js
+jest.config.js

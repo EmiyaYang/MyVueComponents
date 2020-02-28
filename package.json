@@ -1,6 +1,6 @@
 {
   "name": "@emiya/vue-component",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "lib/index.js",
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -9,13 +9,12 @@
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint"
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "ant-design-vue": "^1.4.11",
     "core-js": "^3.6.4",
     "lodash": "^4.17.15",
-    "vue": "^2.6.11"
-  },
-  "devDependencies": {
+    "vue": "^2.6.11",
     "@vue/cli-plugin-babel": "^4.2.0",
     "@vue/cli-plugin-e2e-nightwatch": "^4.2.0",
     "@vue/cli-plugin-eslint": "^4.2.0",
@@ -44,7 +43,7 @@
       "git add"
     ]
   },
-  "description": "## Project setup ``` yarn install ```",
+  "description": "这是基于 Ant-design-vue 的二次封装组件",
   "directories": {
     "lib": "lib",
     "test": "tests"
