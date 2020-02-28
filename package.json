@@ -7,14 +7,14 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "comp": "webpack --config ./build/webpack.config.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "echarts": "^4.6.0",
+    "vue-echarts": "^5.0.0-beta.0"
+  },
   "devDependencies": {
-    "ant-design-vue": "^1.4.11",
-    "core-js": "^3.6.4",
-    "lodash": "^4.17.15",
-    "vue": "^2.6.11",
     "@vue/cli-plugin-babel": "^4.2.0",
     "@vue/cli-plugin-e2e-nightwatch": "^4.2.0",
     "@vue/cli-plugin-eslint": "^4.2.0",
@@ -22,16 +22,22 @@
     "@vue/cli-service": "^4.2.0",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/test-utils": "1.0.0-beta.31",
+    "ant-design-vue": "^1.4.11",
     "babel-eslint": "^10.0.3",
     "chromedriver": "80",
+    "core-js": "^3.6.4",
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-vue": "^6.1.2",
+    "fs-extra": "^8.1.0",
     "geckodriver": "^1.19.1",
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
     "lint-staged": "^9.5.0",
+    "lodash": "^4.17.15",
     "prettier": "^1.19.1",
+    "vue": "^2.6.11",
+    "vue-loader": "^15.9.0",
     "vue-template-compiler": "^2.6.11"
   },
   "gitHooks": {

@@ -1,12 +1,12 @@
+import ProTable from "../../dist/ProTable";
 import { shallowMount } from "@vue/test-utils";
-import HelloWorld from "@/components/HelloWorld.vue";
 
-describe("HelloWorld.vue", () => {
-  it("renders props.msg when passed", () => {
-    const msg = "new message";
-    const wrapper = shallowMount(HelloWorld, {
-      propsData: { msg }
+describe("ProTable.vue", () => {
+  it("renders props.rowKey when passed", () => {
+    const key = "new message";
+    const wrapper = shallowMount(ProTable, {
+      propsData: { rowKey: "key" }
     });
-    expect(wrapper.text()).toMatch(msg);
+    expect(wrapper.text()).toMatch(key);
   });
 });
