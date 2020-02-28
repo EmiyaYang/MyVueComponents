@@ -18,4 +18,4 @@ files.forEach(file => {
 
 module.exports = json;
 
-console.log("打包组件" + inspect(json));
+console.log("打包组件: " + inspect(json));
