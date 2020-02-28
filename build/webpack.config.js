@@ -10,7 +10,7 @@ module.exports = {
     path: path.join(process.cwd(), "lib/"),
     // publicPath: "/dist/",
     filename: "[name]/index.js",
-    library: "EVComponents", // 用 script 引入时挂载的变量
+    library: "emiya", // 用 script 引入时挂载的变量
     libraryTarget: "umd", // 通用模块定义
     // When using libraryTarget: "umd", setting output.
     // umdNamedDefine to true will name the AMD module of the UMD build.
