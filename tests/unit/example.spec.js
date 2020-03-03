@@ -1,12 +1,28 @@
-import ProTable from "../../dist/ProTable";
+// import ProTable from "@/components/ProTable";
+import HelloWorld from "@/components/HelloWorld";
 import { shallowMount } from "@vue/test-utils";
 
-describe("ProTable.vue", () => {
-  it("renders props.rowKey when passed", () => {
-    const key = "new message";
-    const wrapper = shallowMount(ProTable, {
-      propsData: { rowKey: "key" }
+// window is undefined, vue-test-utils needs to be run in a browser environment.
+require("jsdom-global")();
+
+describe("HelloWorld.vue", () => {
+  it("test", () => {
+    const msg = "test";
+
+    const wrapper = shallowMount(HelloWorld, {
+      propsData: { msg }
     });
-    expect(wrapper.text()).toMatch(key);
+
+    expect(wrapper.props().msg).toBe(msg);
   });
 });
+
+// describe("ProTable.vue", () => {
+//   it("renders props.rowKey when passed", () => {
+//     const key = "id";
+//     const wrapper = shallowMount(ProTable, {
+//       propsData: { rowKey: key }
+//     });
+//     expect(wrapper.props().key).toBe(key);
+//   });
+// });
