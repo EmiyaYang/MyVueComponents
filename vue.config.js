@@ -7,5 +7,10 @@ module.exports = {
         javascriptEnabled: true
       }
     }
+  },
+  configureWebpack: {
+    resolve: {
+      extensions: [".js", ".jsx", ".less", ".css"]
+    }
   }
 };

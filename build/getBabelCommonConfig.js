@@ -2,24 +2,21 @@
 
 module.exports = function(modules) {
   const plugins = [
-    require.resolve("babel-plugin-transform-vue-jsx"),
-    require.resolve("babel-plugin-inline-import-data-uri"),
-    require.resolve("babel-plugin-transform-es3-member-expression-literals"),
-    require.resolve("babel-plugin-transform-es3-property-literals"),
-    require.resolve("babel-plugin-transform-object-assign"),
-    require.resolve("babel-plugin-transform-object-rest-spread"),
-    require.resolve("babel-plugin-transform-class-properties")
+    require.resolve("@babel/plugin-proposal-optional-chaining"),
+    require.resolve("@babel/plugin-transform-object-assign"),
+    require.resolve("@vue/babel-plugin-transform-vue-jsx")
   ];
   plugins.push([
-    require.resolve("babel-plugin-transform-runtime"),
-    {
-      polyfill: false
-    }
+    require.resolve("@babel/plugin-transform-runtime")
+    // The @babel/runtime module now skips polyfilling by default
+    // {
+    //   polyfill: false
+    // }
   ]);
   return {
     presets: [
       [
-        require.resolve("babel-preset-env"),
+        require.resolve("@babel/preset-env"),
         {
           modules,
           targets: {
@@ -35,11 +32,11 @@ module.exports = function(modules) {
         }
       ]
     ],
-    plugins,
-    env: {
-      test: {
-        plugins: [require.resolve("babel-plugin-istanbul")]
-      }
-    }
+    plugins
+    // env: {
+    //   test: {
+    //     plugins: [require.resolve("babel-plugin-istanbul")]
+    //   }
+    // }
   };
 };
