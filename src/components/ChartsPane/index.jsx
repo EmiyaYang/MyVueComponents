@@ -1,6 +1,5 @@
 import echarts from "echarts";
 import ECharts from "vue-echarts";
-import "./index.less";
 
 export default {
   props: {

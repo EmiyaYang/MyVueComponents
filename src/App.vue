@@ -13,9 +13,13 @@
 </template>
 
 <script>
-import ProTable from "../lib/ProTable";
-import HelloWorld from "../lib/HelloWorld";
-import ChartsPane from "../lib/ChartsPane";
+// import ProTable from "../lib/ProTable";
+// import HelloWorld from "../lib/HelloWorld";
+// import ChartsPane from "../lib/ChartsPane";
+import ProTable from "./components/ProTable";
+import HelloWorld from "./components/HelloWorld";
+import ChartsPane from "./components/ChartsPane";
+import "./components/style.js";
 
 export default {
   name: "App",
