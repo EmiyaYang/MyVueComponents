@@ -368,7 +368,7 @@ export default {
       rowKey: this.rowKey,
       dataSource: this.computedDataSource,
       columns: this.filteredColumns,
-      expandIcon: this.getExpandIcon,
+      // expandIcon: this.getExpandIcon,
       expandedRowKeys: this.expandedRowKeys,
       pagination: this.pagination,
       rowClassName: this.getRowClassName,

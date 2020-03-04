@@ -4,6 +4,10 @@
 
     <HelloWorld />
 
+    <h1>AntTable</h1>
+
+    <a-table :columns="columns" :dataSource="dataSource" />
+
     <h1>ProTable</h1>
     <ProTable :columns="columns" :dataSource="dataSource" />
 
@@ -31,11 +35,6 @@ export default {
     return {
       columns: [
         {
-          title: "序号",
-          width: "70px",
-          customRender: (value, row, index) => <span>{index + 1}</span>
-        },
-        {
           title: "频道规模",
           dataIndex: "a",
           selectable: true
@@ -56,7 +55,15 @@ export default {
           key: 1,
           a: 2,
           b: 36564,
-          c: 4
+          c: 4,
+          children: [
+            {
+              key: 12,
+              a: 2,
+              b: 36564,
+              c: 4
+            }
+          ]
         },
         {
           key: 2,
