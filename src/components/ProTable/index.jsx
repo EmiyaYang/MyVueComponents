@@ -166,7 +166,7 @@ export default {
           }}
         >
           <a-checkbox-group
-            class="protable__dropdown"
+            class="pro-table__dropdown"
             options={options}
             vModel={this.selectedColumns}
           />
@@ -460,7 +460,11 @@ export default {
     }
 
     return (
-      <a-spin spinning={this.loading} onClick={() => (this.open = false)}>
+      <a-spin
+        class="pro-table-wrapper"
+        spinning={this.loading}
+        onClick={() => (this.open = false)}
+      >
         <section class="toolbar">
           {this.$slots.toolbar}
 
@@ -488,14 +492,14 @@ export default {
                 mode="multiple"
                 placeholder="选择要显示的列"
                 dropdownRender={this.dropdownRender}
-                getPopupContainer={() => triggerNode => triggerNode.parentNode}
+                getPopupContainer={triggerNode => triggerNode.parentNode}
               />
             </section>
           ) : null}
         </section>
 
         <a-table
-          class="protable ant-table-notripped"
+          class="pro-table ant-table-notripped"
           {...{
             attrs: tableProps,
             on: {

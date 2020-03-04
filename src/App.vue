@@ -37,15 +37,18 @@ export default {
         },
         {
           title: "频道规模",
-          dataIndex: "a"
+          dataIndex: "a",
+          selectable: true
         },
         {
           title: "同时在线人数",
-          dataIndex: "b"
+          dataIndex: "b",
+          selectable: true
         },
         {
           title: "占比",
-          dataIndex: "c"
+          dataIndex: "c",
+          selectable: true
         }
       ],
       dataSource: [

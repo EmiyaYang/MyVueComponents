@@ -1,19 +1,6 @@
-.protable {
+.pro-table-wrapper {
   .ant-table-column-has-actions {
     white-space: nowrap;
-  }
-
-  &__dropdown {
-    display: block;
-    padding: 10px;
-
-    .ant-checkbox-wrapper + .ant-checkbox-wrapper {
-      margin-top: 10px;
-    }
-
-    .ant-checkbox-wrapper {
-      display: block;
-    }
   }
 
   .highlight {
@@ -45,7 +32,7 @@
 
       &__raw {
         top: 30px;
-        width: 200px;
+        min-width: 180px;
         height: 0;
         overflow: hidden;
         position: absolute;
@@ -56,6 +43,23 @@
           overflow: hidden;
         }
       }
+    }
+  }
+}
+
+.pro-table {
+  &__dropdown {
+    display: block;
+    padding: 10px !important;
+    width: 100%;
+    text-align: left;
+
+    .ant-checkbox-wrapper + .ant-checkbox-wrapper {
+      margin-top: 10px;
+    }
+
+    .ant-checkbox-wrapper {
+      display: block;
     }
   }
 }
