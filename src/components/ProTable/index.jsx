@@ -452,13 +452,12 @@ export default {
       }
     };
 
-    const expandedSlots = {
-      expandedRowRender: value => {
-        if (!this.ifHasExpanded) return null;
+    const expandedSlots = {};
 
-        return this.$scopedSlots.expandedRowRender?.({ value });
-      }
-    };
+    if (this.ifHasExpanded) {
+      expandedSlots.expandedRowRender = value =>
+        this.$scopedSlots.expandedRowRender?.({ value });
+    }
 
     return (
       <a-spin spinning={this.loading} onClick={() => (this.open = false)}>

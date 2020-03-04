@@ -14,10 +14,10 @@
 
 <script>
 import HelloWorld from "./components/HelloWorld";
-import ProTable from "../lib/ProTable";
-import ChartsPane from "../lib/ChartsPane";
-// import ProTable from "./components/ProTable";
-// import ChartsPane from "./components/ChartsPane";
+// import ProTable from "../lib/ProTable";
+// import ChartsPane from "../lib/ChartsPane";
+import ProTable from "./components/ProTable";
+import ChartsPane from "./components/ChartsPane";
 import "./components/style.js";
 
 export default {

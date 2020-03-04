@@ -13,6 +13,14 @@ import ChartsPane from "@emiya/vue-component/lib/ChartsPane";
 
 // 全部导入
 import { ProTable, ChartsPane } from "@emiya/vue-component";
+import "@emiya/vue-component/style";
+```
+
+```js
+// webpack
+resolve: {
+  extensions: [".js", ".jsx", ".less", ".css"];
+}
 ```
 
 ## 组件介绍
