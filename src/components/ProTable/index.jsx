@@ -3,15 +3,20 @@ import isEqual from "lodash/isEqual";
 import fromPairs from "lodash/fromPairs";
 
 export default {
+  name: "ProTable",
   props: {
     // 规定 rowKey 的值必须为 String
     rowKey: {
       type: String,
       default: "key"
     },
-    loading: {
-      type: Boolean,
-      default: false
+    expandedRowKeys: {
+      type: Array,
+      default: () => []
+    },
+    expandIcon: {
+      type: Function,
+      default: null
     },
     columns: {
       type: Array,
@@ -52,6 +57,10 @@ export default {
     allowExpandEmpty: {
       type: Boolean,
       default: false
+    },
+    preExpand: {
+      type: Function,
+      default: null
     }
   },
   data() {
@@ -60,8 +69,6 @@ export default {
       searchInput: null,
       computedColumns: [],
       filteredColumns: [],
-      // 展开项的 key 集合
-      expandedRowKeys: [],
       allRowKeys: [],
       // 列控制选择项
       columnOpts: [],
@@ -139,19 +146,25 @@ export default {
     dataSource: {
       immediate: true,
       handler() {
-        this.init();
+        this.$nextTick(() => {
+          this.updateAllRowKeys();
+        });
       }
     }
   },
   methods: {
-    init() {
-      this.$nextTick(() => {
-        this.updateAllRowKeys();
-        this.expandedRowKeys = [];
-      });
+    initRowKeys() {
+      this.updateAllRowKeys();
+
+      this.$emit("update:expandedRowKeys", []);
     },
     handleExpand(expanded, row) {
-      this.$emit("expand", expanded, row);
+      // REVIEW: 这种index不能下钻
+      const index = this.dataSource.findIndex(
+        item => item[this.rowKey] === row[this.rowKey]
+      );
+
+      this.$emit("expand", expanded, row, index);
     },
     dropdownRender() {
       const options = this.columnOpts.map(item => ({
@@ -199,6 +212,17 @@ export default {
         .map(item => item[this.rowKey]);
     },
     getExpandIcon({ expanded, record, onExpand }) {
+      // REVIEW: 这种index不能下钻
+      const index = this.dataSource.findIndex(
+        item => item[this.rowKey] === record[this.rowKey]
+      );
+
+      const handleClick = () => {
+        this.preExpand
+          ? this.preExpand(expanded, record, index, onExpand.bind(this, record))
+          : onExpand.call(this, record);
+      };
+
       // 表格内嵌
       if (
         (record[this.childrenKey]?.length && this.ifHasExpanded) ||
@@ -206,10 +230,11 @@ export default {
       ) {
         return (
           <a-icon
+            class="expand-icon"
             type={expanded ? "minus-square" : "plus-square"}
             {...{
               on: {
-                click: onExpand.bind(this, record)
+                click: handleClick
               }
             }}
           />
@@ -221,10 +246,11 @@ export default {
         if (this.expandLoad || record[this.childrenColumnName].length > 0) {
           return (
             <a-icon
+              class="expand-icon"
               type={expanded ? "minus-square" : "plus-square"}
               {...{
                 on: {
-                  click: onExpand.bind(this, record)
+                  click: handleClick
                 }
               }}
             />
@@ -242,7 +268,8 @@ export default {
         this.pageChangeFlag = true;
         this.currentPage = current;
       }
-      this.expandedRowKeys = [];
+
+      this.$emit("update:expandedRowKeys", []);
 
       this.$nextTick(() => {
         this.updateAllRowKeys(currentDataSource);
@@ -269,10 +296,12 @@ export default {
         return;
       }
 
-      this.expandedRowKeys = this.accordion ? [val[val.length - 1]] : val;
+      const expandedRowKeys = this.accordion ? [val[val.length - 1]] : val;
+      this.$emit("update:expandedRowKeys", expandedRowKeys);
     },
     handleExpandAll() {
-      this.expandedRowKeys = this.ifAllExpanded ? [] : this.allRowKeys;
+      const expandedRowKeys = this.ifAllExpanded ? [] : this.allRowKeys;
+      this.$emit("update:expandedRowKeys", expandedRowKeys);
     },
     initColumns() {
       const columns = cloneDeep(this.columns);
@@ -365,15 +394,15 @@ export default {
   },
   render() {
     const tableProps = {
+      ...this.$attrs,
       rowKey: this.rowKey,
       dataSource: this.computedDataSource,
       columns: this.filteredColumns,
-      // expandIcon: this.getExpandIcon,
+      expandIcon: this.expandIcon || this.getExpandIcon,
       expandedRowKeys: this.expandedRowKeys,
       pagination: this.pagination,
       rowClassName: this.getRowClassName,
-      childrenColumnName: this.childrenColumnName,
-      ...this.$attrs
+      childrenColumnName: this.childrenColumnName
     };
 
     const tableColumnSlots = fromPairs(
@@ -460,11 +489,7 @@ export default {
     }
 
     return (
-      <a-spin
-        class="pro-table-wrapper"
-        spinning={this.loading}
-        onClick={() => (this.open = false)}
-      >
+      <section class="pro-table-wrapper" onClick={() => (this.open = false)}>
         <section class="toolbar">
           {this.$slots.toolbar}
 
@@ -503,10 +528,10 @@ export default {
           {...{
             attrs: tableProps,
             on: {
+              ...this.$listeners,
               expandedRowsChange: this.handleExpandedRowsChange,
               expand: this.handleExpand,
-              change: this.handleChange,
-              ...this.$listeners
+              change: this.handleChange
             },
             scopedSlots: {
               ...tableColumnSlots,
@@ -517,7 +542,7 @@ export default {
         >
           {this.$slots.default}
         </a-table>
-      </a-spin>
+      </section>
     );
   }
 };

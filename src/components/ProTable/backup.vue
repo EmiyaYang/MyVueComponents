@@ -329,6 +329,7 @@ export default {
       ) {
         return (
           <a-icon
+            class="expand-icon"
             type={expanded ? "minus-square" : "plus-square"}
             {...{
               on: {
@@ -344,6 +345,7 @@ export default {
         if (this.expandLoad || record[this.childrenColumnName].length > 0) {
           return (
             <a-icon
+              class="expand-icon"
               type={expanded ? "minus-square" : "plus-square"}
               {...{
                 on: {
