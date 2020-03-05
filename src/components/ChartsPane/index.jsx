@@ -2,7 +2,15 @@ import echarts from "echarts";
 import ECharts from "vue-echarts";
 
 export default {
+  model: {
+    prop: "value",
+    event: "change"
+  },
   props: {
+    value: {
+      default: () => [],
+      type: Array
+    },
     sharedAttrs: {
       default: () => ({}),
       type: Object
@@ -14,10 +22,6 @@ export default {
     cardGrid: {
       default: null,
       type: Object
-    },
-    initOptionsGroup: {
-      default: () => [],
-      type: Array
     },
     extraInfos: {
       default: () => [],
@@ -70,13 +74,13 @@ export default {
     },
     /**
      * 对所有 vue-echart 实例传入选项进行 merge
-     * 当 optionGroup 长度与 initOptionsGroup 不对齐时会对 initOptionsGroup 进行改变,
+     * 当 optionGroup 长度与 value 不对齐时会对 value 进行改变,
      * 在绑定时需要 .sync 进行修饰
      *
      * @param {*} optionsGroup
      */
     async massMergeOption(optionsGroup) {
-      const offset = optionsGroup.length - this.initOptionsGroup.length;
+      const offset = optionsGroup.length - this.value.length;
 
       const notify = () => {
         optionsGroup.forEach((options, index) => {
@@ -89,20 +93,17 @@ export default {
         return;
       }
 
-      const EVENT = "update:initOptionsGroup";
+      const EVENT = "change";
 
       if (offset > 0) {
         // 新增
         this.$emit(EVENT, [
-          ...this.initOptionsGroup,
+          ...this.value,
           ...new Array(offset).fill().map(Object)
         ]);
       } else {
         // 缩减
-        this.$emit(
-          EVENT,
-          this.initOptionsGroup.slice(0, this.initOptionsGroup + offset)
-        );
+        this.$emit(EVENT, this.value.slice(0, this.value + offset));
       }
 
       // $emit -> $on -> 渲染新增 chart -> notify
@@ -134,12 +135,12 @@ export default {
       <a-list
         class={{
           "charts-pane": true,
-          "charts-pane--bordered": this.initOptionsGroup.length && this.bordered
+          "charts-pane--bordered": this.value.length && this.bordered
         }}
         {...{
           attrs: {
             key: this.hash,
-            "data-source": this.initOptionsGroup,
+            "data-source": this.value,
             grid: this.grid
           },
           scopedSlots: {
