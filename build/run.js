@@ -1,7 +1,17 @@
 const gulp = require("gulp");
-
+const program = require("commander");
 require("./gulpfile");
-runTask("compile");
+
+program.parse(process.argv);
+const task = program.args[0];
+
+if (!task) {
+  program.help();
+} else {
+  console.log("Emiya run:", task);
+
+  runTask(task);
+}
 
 function runTask(toRun) {
   const metadata = { task: toRun };
@@ -24,3 +34,7 @@ function runTask(toRun) {
     gulp.emit("task_err", err);
   }
 }
+
+gulp.on("task_not_found", () => {
+  console.log("task_not_found");
+});

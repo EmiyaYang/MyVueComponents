@@ -12,7 +12,8 @@
     "lint": "vue-cli-service lint",
     "comp": "webpack --config ./build/webpack.config.js",
     "compile": "node ./build/run.js",
-    "pub": "node ./build/tools/publish.js"
+    "pub": "node ./build/tools/publish.js",
+    "prepublish": "node ./build/run.js guard"
   },
   "dependencies": {
     "echarts": "^4.6.0",

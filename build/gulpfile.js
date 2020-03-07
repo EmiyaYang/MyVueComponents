@@ -69,3 +69,8 @@ gulp.task(
     });
   })
 );
+
+// 用于阻止一些行为
+gulp.task("guard", function(cb) {
+  cb(1);
+});
