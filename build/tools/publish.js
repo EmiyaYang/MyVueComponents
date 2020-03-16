@@ -33,11 +33,20 @@ const questions = [
 inquirer.prompt(questions).then(answer => {
   const { pack, level } = answer;
 
-  execSync(`yarn ${pack}`, { stdio: "inherit" });
+  // TODO: 检测git工作树, 如未清空则自动生成提交
 
-  execSync(`yarn version ${level}`, { stdio: "inherit" });
+  try {
+    execSync(`yarn ${pack}`, { stdio: "inherit" });
 
-  execSync("yarn publish", { stdio: "inherit" });
+    // 发布前要清空工作树, 这个错误被捕获但没有打印出日志
+    execSync(`npm version ${level}`, { stdio: "inherit" });
 
-  console.log("发布成功!");
+    execSync("npm publish --with-run-tools", { stdio: "inherit" });
+
+    console.log("发布成功!");
+  } catch (e) {
+    console.log("发布失败! 错误信息如下: \n");
+    console.log("--------------------------------");
+    console.warn(e);
+  }
 });
