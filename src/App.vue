@@ -25,7 +25,7 @@
 
     <h1>Promodal</h1>
     <a-button @click="modalVisible = true">Call</a-button>
-    <ProModal :visible="modalVisible" />
+    <ProModal v-model="modalVisible" />
   </div>
 </template>
 

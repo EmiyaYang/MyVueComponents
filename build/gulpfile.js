@@ -12,6 +12,7 @@ const libDir = path.join(cwd, "lib");
 function compile() {
   // rm -rf
   rimraf.sync(libDir);
+
   const assetsStream = gulp
     .src(["src/components/**/*.@(png|svg)"])
     .pipe(gulp.dest(libDir));
@@ -22,6 +23,8 @@ function compile() {
 
   const jsFilesStream = babelify(
     gulp.src([
+      "src/components/index.js",
+      "src/components/style.js",
       "src/components/**/*.js",
       "src/components/**/*.jsx",
       "!src/components/*/__tests__/*"
