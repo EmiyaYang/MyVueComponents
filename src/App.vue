@@ -22,6 +22,10 @@
 
     <h1>ChartsPane</h1>
     <ChartsPane ref="ChartsPane" v-model="optionsGroup" />
+
+    <h1>Promodal</h1>
+    <a-button @click="modalVisible = true">Call</a-button>
+    <ProModal :visible="modalVisible" />
   </div>
 </template>
 
@@ -31,6 +35,7 @@ import HelloWorld from "./components/HelloWorld";
 // import ChartsPane from "../lib/ChartsPane";
 import ProTable from "./components/ProTable/index";
 import ChartsPane from "./components/ChartsPane";
+import ProModal from "./components/ProModal";
 import "./components/style.js";
 
 const getPieOptions = () => {
@@ -98,10 +103,12 @@ export default {
   components: {
     HelloWorld,
     ProTable,
-    ChartsPane
+    ChartsPane,
+    ProModal
   },
   data() {
     return {
+      modalVisible: false,
       optionsGroup: [],
       loading: false,
       expandedRowKeys: [],

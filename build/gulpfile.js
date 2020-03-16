@@ -74,3 +74,7 @@ gulp.task(
 gulp.task("guard", function(cb) {
   cb(1);
 });
+
+gulp.on("task_not_found", () => {
+  console.log("没有该任务");
+});

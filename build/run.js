@@ -34,7 +34,3 @@ function runTask(toRun) {
     gulp.emit("task_err", err);
   }
 }
-
-gulp.on("task_not_found", () => {
-  console.log("task_not_found");
-});
