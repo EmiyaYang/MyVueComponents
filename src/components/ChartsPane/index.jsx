@@ -84,7 +84,7 @@ export default {
 
       const notify = () => {
         optionsGroup.forEach((options, index) => {
-          this.$refs[this.getChartRef(index)].mergeOptions(options);
+          this.$refs[this.getChartRef(index)]?.mergeOptions(options);
         });
       };
 
@@ -94,6 +94,9 @@ export default {
       }
 
       const EVENT = "change";
+
+      // $emit -> $on -> 渲染新增 chart -> notify
+      this.$on(EVENT, () => this.$nextTick(notify));
 
       if (offset > 0) {
         // 新增
@@ -105,9 +108,6 @@ export default {
         // 缩减
         this.$emit(EVENT, this.value.slice(0, this.value + offset));
       }
-
-      // $emit -> $on -> 渲染新增 chart -> notify
-      this.$on(EVENT, this.$nextTick(notify));
     }
   },
   render() {

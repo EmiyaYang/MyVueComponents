@@ -21,7 +21,7 @@
     <!-- @expand="handleExpand" -->
 
     <h1>ChartsPane</h1>
-    <ChartsPane ref="ChartsPane" v-model="optionsGroup" />
+    <ChartsPane ref="ChartsPane" :value="optionsGroup" @change="changeTest" />
 
     <h1>Promodal</h1>
     <a-button @click="modalVisible = true">Call</a-button>
@@ -160,13 +160,22 @@ export default {
   },
   mounted() {
     this.$refs.ChartsPane.massMergeOption([getPieOptions()]);
+
+    setTimeout(() => {
+      this.$refs.ChartsPane.massMergeOption([]);
+    }, 1000);
   },
   methods: {
+    changeTest(value) {
+      console.log(value);
+      this.optionsGroup = value;
+    },
     async handlePreExpand(expanded, row, index, next) {
       // 当前未展开, 将要展开
       if (!expanded && !this.dataSource[index].$loaded) {
         this.loading = true;
-        const children = await this.getNestRowData();
+        // const children = await this.getNestRowData();
+        const children = [];
         await new Promise(resolve => setTimeout(resolve, 2000));
         this.loading = false;
         this.dataSource[index].children = children;
