@@ -75,7 +75,7 @@ export default {
     /**
      * 对所有 vue-echart 实例传入选项进行 merge
      * 当 optionGroup 长度与 value 不对齐时会对 value 进行改变,
-     * 在绑定时需要 .sync 进行修饰
+     * 有效前提: 使用v-model进行双向绑定
      *
      * @param {*} optionsGroup
      */
@@ -139,9 +139,13 @@ export default {
         }}
         {...{
           attrs: {
+            ...this.$attrs,
             key: this.hash,
             "data-source": this.value,
             grid: this.grid
+          },
+          on: {
+            ...this.$listeners
           },
           scopedSlots: {
             renderItem: (item, index) => {
