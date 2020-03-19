@@ -162,7 +162,7 @@ export default {
     this.$refs.ChartsPane.massMergeOption([getPieOptions()]);
 
     setTimeout(() => {
-      this.$refs.ChartsPane.massMergeOption([]);
+      this.$refs.ChartsPane.massMergeOption([getPieOptions(), getPieOptions()]);
     }, 1000);
   },
   methods: {

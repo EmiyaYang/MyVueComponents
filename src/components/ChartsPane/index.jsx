@@ -78,12 +78,15 @@ export default {
      * 有效前提: 使用v-model进行双向绑定
      *
      * @param {*} optionsGroup
+     * @param {boolean} 是否在 init 之前清除原来的 option
      */
-    async massMergeOption(optionsGroup) {
+    async massMergeOption(optionsGroup, clear = false) {
       const offset = optionsGroup.length - this.value.length;
 
       const notify = () => {
         optionsGroup.forEach((options, index) => {
+          if (clear) this.$refs[this.getChartRef(index)]?.clear();
+
           this.$refs[this.getChartRef(index)]?.mergeOptions(options);
         });
       };
