@@ -113,11 +113,10 @@ export default {
   data() {
     return {
       jsonData: {
-        aaaaaaaa: {
-          value: 123123123,
-          label: "郑楚楚尘沙ID森OA东佛洞",
-          arr: [{}, 1232]
-        },
+        a: [1],
+        // a: [1, 2],
+        // // a: [1, 2, 3],
+        d: { c: { a: [] } },
         b: false,
         c: null
       },

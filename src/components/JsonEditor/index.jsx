@@ -1,22 +1,17 @@
 // import { inspect } from 'util';
 import "./index.less";
 
-// 抹平数组解构与对象解构的差异
-function refreshByDeconstruct(value) {
-  // primitive
-  if (typeof value !== "object" || value === null) return value;
-
-  return Array.isArray(value) ? [...value] : { ...value };
-}
+// eslint-disable-next-line no-unused-vars
+import { refreshByDeconstruct, isPrimitive, getKeyLen } from "./util";
 
 export default {
   name: "JsonEditor",
   model: {
-    prop: "data",
+    prop: "value",
     event: "change"
   },
   props: {
-    data: {
+    value: {
       type: [Object, Array, String, Boolean, Number],
       default: ""
     },
@@ -33,6 +28,11 @@ export default {
     isLast: {
       type: Boolean,
       default: true
+    },
+    // 起始行号
+    startLineNo: {
+      type: Number,
+      default: 1
     }
   },
   data() {
@@ -48,14 +48,14 @@ export default {
   computed: {
     // 获取六种类型
     type() {
-      if (Array.isArray(this.data)) return "array";
+      if (Array.isArray(this.value)) return "array";
 
-      if (this.data === null) return "null";
+      if (this.value === null) return "null";
 
-      return typeof this.data;
+      return typeof this.value;
     },
     isPrimitive() {
-      return typeof this.data !== "object" || this.data === null;
+      return isPrimitive(this.value);
     },
     isArray() {
       return this.type === "array";
@@ -63,7 +63,7 @@ export default {
     isEmpty() {
       if (this.isPrimitive) return true;
 
-      return Object.keys(this.data).length === 0;
+      return Object.keys(this.value).length === 0;
     },
     parens() {
       if (this.isPrimitive) return [];
@@ -78,107 +78,6 @@ export default {
       this.collapsed = !this.collapsed;
     },
 
-    renderValue() {
-      // FIXME:
-      // this.valueEditing = true;
-
-      if (this.valueEditing) {
-        return (
-          <a-textarea
-            ref="ValueEditor"
-            class={["json-item-value", "json-item-value--editable"]}
-            vModel={this.tmpValue}
-            autoSize={{ minRows: 1, maxRows: 5 }}
-            onBlur={() => {
-              this.valueEditing = false;
-
-              // https://www.quora.com/How-can-I-parse-unquoted-JSON-with-JavaScript
-              // const data = eval('(' + this.tmpValue + ')');
-
-              try {
-                const data = JSON.parse(this.tmpValue);
-
-                if (JSON.stringify(data) === JSON.stringify(this.data)) {
-                  return;
-                }
-
-                this.$emit("change", data);
-              } catch (e) {
-                // eslint-disable-next-line no-console
-                console.warn(e);
-                // TODO: 更好的错误提示
-              }
-            }}
-          />
-        );
-      }
-
-      const classes = [
-        "json-item-value",
-        `json-item-value--${this.type}`,
-        `json-item-value--${this.collapsed ? "collapsed" : "open"}`,
-        this.isPrimitive || this.isEmpty || this.collapsed
-          ? "json-item-value--inline"
-          : "json-item-value--block"
-      ];
-
-      // 处理原始值
-      if (this.isPrimitive) {
-        const data =
-          typeof this.data === "string"
-            ? `"${this.data}"`
-            : this.data?.toString() || this.type;
-
-        return <span class={classes}>{data}</span>;
-      }
-
-      // 处理空索引值
-      if (this.isEmpty)
-        return <span class={classes}>{this.parens.join("")}</span>;
-
-      const arr = Object.keys(this.data);
-
-      return (
-        <section class={classes}>
-          {this.collapsed ? (
-            <span> ... </span>
-          ) : (
-            arr.map((key, index) => {
-              const subData = this.data[key];
-
-              return (
-                <JsonEditor
-                  data={subData}
-                  key={key}
-                  jsonKey={key}
-                  isLast={index === arr.length - 1}
-                  {...{
-                    on: {
-                      change: value => {
-                        this.data[key] = value;
-
-                        this.$emit("change", refreshByDeconstruct(this.data));
-                      },
-                      // 目前仅处理对象
-                      "update:jsonKey": newKey => {
-                        if (newKey) {
-                          // rename key
-                          this.data[newKey] = this.data[key];
-                        }
-
-                        delete this.data[key];
-
-                        this.$emit("change", refreshByDeconstruct(this.data));
-                      }
-                    }
-                  }}
-                />
-              );
-            })
-          )}
-        </section>
-      );
-    },
     renderLabel() {
       if (this.labelEditing) {
         return (
@@ -203,13 +102,13 @@ export default {
         expandIcon = this.collapsed ? (
           <a-icon
             class="json-item-label__icon"
-            type="plus-square"
+            type="caret-right"
             onClick={this.toggleCollapsed}
           />
         ) : (
           <a-icon
             class="json-item-label__icon"
-            type="minus-square"
+            type="caret-down"
             onClick={this.toggleCollapsed}
           />
         );
@@ -243,16 +142,128 @@ export default {
                 <span class="json-item-label__colon">:</span>
               </span>
             ) : (
-              <span></span>
+              <span style="width: 1px; display: inline-block;">&nbsp;</span>
             )}
 
             {!this.isEmpty && !this.isPrimitive ? (
               <span class="json-item-label__paren">{this.parens[0]}</span>
             ) : null}
+
+            <span class="json-item-label__no"> {this.startLineNo} </span>
           </span>
         </span>
       );
     },
+
+    renderValue() {
+      if (this.valueEditing) {
+        return (
+          <a-textarea
+            ref="ValueEditor"
+            class={["json-item-value", "json-item-value--editable"]}
+            vModel={this.tmpValue}
+            autoSize={{ minRows: 1, maxRows: 5 }}
+            onBlur={() => {
+              this.valueEditing = false;
+
+              // https://www.quora.com/How-can-I-parse-unquoted-JSON-with-JavaScript
+              // const data = eval('(' + this.tmpValue + ')');
+
+              try {
+                const data = JSON.parse(this.tmpValue);
+
+                if (JSON.stringify(data) === JSON.stringify(this.value)) {
+                  return;
+                }
+
+                this.$emit("change", data);
+              } catch (e) {
+                // eslint-disable-next-line no-console
+                console.warn(e);
+                // TODO: 更好的错误提示
+              }
+            }}
+          />
+        );
+      }
+
+      const classes = [
+        "json-item-value",
+        `json-item-value--${this.type}`,
+        `json-item-value--${this.collapsed ? "collapsed" : "open"}`,
+        this.isPrimitive || this.isEmpty || this.collapsed
+          ? "json-item-value--inline"
+          : "json-item-value--block"
+      ];
+
+      // 处理原始值
+      if (this.isPrimitive) {
+        const data =
+          typeof this.value === "string"
+            ? `"${this.value}"`
+            : this.value?.toString() || this.type;
+
+        return <span class={classes}>{data}</span>;
+      }
+
+      // 处理空索引值
+      if (this.isEmpty)
+        return <span class={classes}>{this.parens.join("")}</span>;
+
+      const arr = Object.keys(this.value);
+
+      let pre = 1;
+      // eslint-disable-next-line no-unused-vars
+      let preItem = null;
+
+      return (
+        <section class={classes}>
+          {this.collapsed ? (
+            <span> ... </span>
+          ) : (
+            arr.map((key, index) => {
+              const subData = this.value[key];
+
+              const startLineNo = this.startLineNo + index + pre;
+
+              // primitive 返回 0
+              pre += getKeyLen(subData);
+
+              return (
+                <JsonEditor
+                  value={subData}
+                  key={key}
+                  jsonKey={key}
+                  isLast={index === arr.length - 1}
+                  startLineNo={startLineNo}
+                  {...{
+                    on: {
+                      change: value => {
+                        this.value[key] = value;
+
+                        this.$emit("change", refreshByDeconstruct(this.value));
+                      },
+                      // 目前仅处理对象
+                      "update:jsonKey": newKey => {
+                        if (newKey) {
+                          // rename key
+                          this.value[newKey] = this.value[key];
+                        }
+
+                        delete this.value[key];
+
+                        this.$emit("change", refreshByDeconstruct(this.value));
+                      }
+                    }
+                  }}
+                />
+              );
+            })
+          )}
+        </section>
+      );
+    },
+
     renderLastLine() {
       return (
         <section
@@ -263,9 +274,16 @@ export default {
               : ""
           ]}
         >
+          {/* {!this.isEmpty && !this.isPrimitive ? (
+            <span class="json-item-last__no">
+              {this.startLineNo + getKeyLen(this.value) + 1}
+            </span>
+          ) : null} */}
+
           <span class="json-item-last__paren">
             {!this.isEmpty && !this.isPrimitive ? this.parens[1] : null}
           </span>
+
           {this.isLast ? null : <span>,</span>}
           <a-icon
             class="json-item-last__icon"
@@ -274,7 +292,7 @@ export default {
             onClick={() => {
               this.valueEditing = true;
 
-              this.tmpValue = JSON.stringify(this.data, null, 4);
+              this.tmpValue = JSON.stringify(this.value, null, 4);
 
               this.$nextTick(() => {
                 this.$refs.ValueEditor.$el.focus();

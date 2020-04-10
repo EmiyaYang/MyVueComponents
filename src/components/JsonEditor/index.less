@@ -5,7 +5,7 @@
 @prefix: json-item;
 
 .json-editor-container {
-  // display: flex;
+  position: relative;
   text-align: left;
   font-family: Consolas !important;
 
@@ -31,7 +31,6 @@
 
     &-label {
       display: inline-block;
-      position: relative;
 
       // REVIEW: 需要检查兼容性 👀
       // display: flex;
@@ -47,7 +46,7 @@
         cursor: pointer;
         margin-right: 5px;
         position: absolute;
-        left: -1.5em;
+        left: 1em;
         color: @icon-color;
       }
 
@@ -68,6 +67,11 @@
         &::after {
           content: '"';
         }
+      }
+
+      &__no {
+        position: absolute;
+        left: 0;
       }
     }
 
@@ -115,6 +119,11 @@
     }
 
     &-last {
+      &__no {
+        position: absolute;
+        left: 0;
+      }
+
       &--inline {
         display: inline-block;
       }
