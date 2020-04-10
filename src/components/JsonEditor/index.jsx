@@ -46,7 +46,8 @@ export default {
       valueEditable: false,
       valueEditing: false,
       tmpLabel: "",
-      tmpValue: ""
+      tmpValue: "",
+      ifError: false
     };
   },
   computed: {
@@ -80,6 +81,47 @@ export default {
   methods: {
     toggleCollapsed() {
       this.collapsed = !this.collapsed;
+
+      // 开 --> 闭
+      if (this.collapsed) {
+        this.valueEditing = false;
+        this.labelEditing = false;
+        this.$forceUpdate();
+      }
+    },
+
+    prepareValueEdit() {
+      this.isError = false;
+      this.valueEditing = true;
+
+      this.tmpValue = JSON.stringify(this.value, null, 4);
+
+      this.$nextTick(() => {
+        this.$refs.ValueEditor.$el.focus();
+      });
+    },
+
+    handleValueChange() {
+      // https://www.quora.com/How-can-I-parse-unquoted-JSON-with-JavaScript
+      // const data = eval('(' + this.tmpValue + ')');
+
+      try {
+        const data = JSON.parse(this.tmpValue);
+
+        this.valueEditing = false;
+
+        if (JSON.stringify(data) === JSON.stringify(this.value)) {
+          return;
+        }
+
+        this.$emit("change", data);
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn(e);
+        this.isError = true;
+        // isError涉及视图更新
+        this.$forceUpdate();
+      }
     },
 
     renderLabel() {
@@ -162,32 +204,26 @@ export default {
     renderValue() {
       if (this.valueEditing) {
         return (
-          <a-textarea
-            ref="ValueEditor"
-            class={["json-item-value", "json-item-value--editable"]}
-            vModel={this.tmpValue}
-            autoSize={{ minRows: 1, maxRows: 5 }}
-            onBlur={() => {
-              this.valueEditing = false;
-
-              // https://www.quora.com/How-can-I-parse-unquoted-JSON-with-JavaScript
-              // const data = eval('(' + this.tmpValue + ')');
-
-              try {
-                const data = JSON.parse(this.tmpValue);
-
-                if (JSON.stringify(data) === JSON.stringify(this.value)) {
+          <section class={["json-item-value", "json-item-value--editable"]}>
+            <a-textarea
+              ref="ValueEditor"
+              vModel={this.tmpValue}
+              autoSize={{ minRows: 1, maxRows: 5 }}
+              onKeydown={e => {
+                if (e.code === "Enter") {
+                  this.handleValueChange();
+                  e.preventDefault();
                   return;
                 }
+              }}
+            />
 
-                this.$emit("change", data);
-              } catch (e) {
-                // eslint-disable-next-line no-console
-                console.warn(e);
-                // TODO: 更好的错误提示
-              }
-            }}
-          />
+            {this.isError ? (
+              <section class="json-item-value__error">
+                请输入有效的数据格式
+              </section>
+            ) : null}
+          </section>
         );
       }
 
@@ -291,19 +327,25 @@ export default {
             class="json-item-last__icon"
             type="edit"
             hidden={!this.valueEditable}
-            onClick={() => {
-              this.valueEditing = true;
-
-              this.tmpValue = JSON.stringify(this.value, null, 4);
-
-              this.$nextTick(() => {
-                this.$refs.ValueEditor.$el.focus();
-              });
-            }}
+            onClick={this.prepareValueEdit}
           />
         </section>
       );
     }
+  },
+  created() {
+    const listener = document.addEventListener("keydown", e => {
+      if (e.code === "Escape") {
+        this.valueEditing = false;
+        this.labelEditing = false;
+        e.preventDefault();
+        return;
+      }
+    });
+
+    this.$on("hook:beforeDestroy", () => {
+      document.removeEventListener("keydown", listener);
+    });
   },
   render() {
     const listeners = {
