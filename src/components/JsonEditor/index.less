@@ -8,6 +8,7 @@
   position: relative;
   text-align: left;
   font-family: Consolas !important;
+  padding-left: 3rem !important;
 
   &.@{prefix},
   .@{prefix} {
@@ -46,7 +47,7 @@
         cursor: pointer;
         margin-right: 5px;
         position: absolute;
-        left: 1em;
+        left: 2em;
         color: @icon-color;
       }
 
@@ -71,6 +72,9 @@
 
       &__no {
         position: absolute;
+        display: inline-block;
+        width: 2em;
+        text-align: right;
         left: 0;
       }
     }
@@ -79,6 +83,10 @@
       &--editable {
         max-width: 800px;
         vertical-align: text-top;
+      }
+
+      &__ellipsis {
+        cursor: pointer;
       }
 
       &__edit {

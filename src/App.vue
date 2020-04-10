@@ -112,14 +112,17 @@ export default {
   },
   data() {
     return {
-      jsonData: {
-        a: [1],
-        // a: [1, 2],
-        // // a: [1, 2, 3],
-        d: { c: { a: [] } },
-        b: false,
-        c: null
-      },
+      jsonData: [
+        {
+          a: [1],
+          // a: [1, 2],
+          // // a: [1, 2, 3],
+          d: { c: { a: [] } },
+          b: false,
+          c: null
+        },
+        [1123]
+      ],
       modalVisible: false,
       optionsGroup: [],
       loading: false,

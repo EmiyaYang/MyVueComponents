@@ -1,8 +1,12 @@
-// import { inspect } from 'util';
 import "./index.less";
 
 // eslint-disable-next-line no-unused-vars
-import { refreshByDeconstruct, isPrimitive, getKeyLen } from "./util";
+import {
+  refreshByDeconstruct,
+  isPrimitive,
+  getKeyLen,
+  renameKeyInObj
+} from "./util";
 
 export default {
   name: "JsonEditor",
@@ -213,13 +217,15 @@ export default {
       const arr = Object.keys(this.value);
 
       let pre = 1;
-      // eslint-disable-next-line no-unused-vars
-      let preItem = null;
 
       return (
         <section class={classes}>
           {this.collapsed ? (
-            <span> ... </span>
+            <a-icon
+              class="json-item-value__ellipsis"
+              type="small-dash"
+              onClick={this.toggleCollapsed}
+            />
           ) : (
             arr.map((key, index) => {
               const subData = this.value[key];
@@ -243,16 +249,12 @@ export default {
 
                         this.$emit("change", refreshByDeconstruct(this.value));
                       },
-                      // 目前仅处理对象
+                      // 仅处理对象
                       "update:jsonKey": newKey => {
-                        if (newKey) {
-                          // rename key
-                          this.value[newKey] = this.value[key];
-                        }
-
-                        delete this.value[key];
-
-                        this.$emit("change", refreshByDeconstruct(this.value));
+                        this.$emit(
+                          "change",
+                          renameKeyInObj(this.value, key, newKey)
+                        );
                       }
                     }
                   }}
