@@ -1,8 +1,9 @@
 <template>
   <div id="app">
-    <h1>HelloWorld</h1>
+    <h1>JsonEditor</h1>
 
-    <HelloWorld />
+    <JsonViewer :data="jsonData" />
+    <JsonEditor v-model="jsonData" />
 
     <h1>AntTable</h1>
 
@@ -30,12 +31,13 @@
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
 // import ProTable from "../lib/ProTable";
 // import ChartsPane from "../lib/ChartsPane";
 import ProTable from "./components/ProTable/index";
 import ChartsPane from "./components/ChartsPane";
 import ProModal from "./components/ProModal";
+import JsonEditor from "./components/JsonEditor";
+import JsonViewer from "./components/JsonViewer";
 import "./components/style.js";
 
 const getPieOptions = () => {
@@ -101,13 +103,24 @@ const getPieOptions = () => {
 export default {
   name: "App",
   components: {
-    HelloWorld,
     ProTable,
     ChartsPane,
-    ProModal
+    ProModal,
+    JsonEditor,
+    // eslint-disable-next-line vue/no-unused-components
+    JsonViewer
   },
   data() {
     return {
+      jsonData: {
+        aaaaaaaa: {
+          value: 123123123,
+          label: "郑楚楚尘沙ID森OA东佛洞",
+          arr: [{}, 1232]
+        },
+        b: false,
+        c: null
+      },
       modalVisible: false,
       optionsGroup: [],
       loading: false,

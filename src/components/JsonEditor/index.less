@@ -1,0 +1,129 @@
+@label-width: 120px;
+@icon-color: grey;
+@label-color: #956f38;
+@indent: 2rem;
+@prefix: json-item;
+
+.json-editor-container {
+  // display: flex;
+  text-align: left;
+  font-family: Consolas !important;
+
+  &.@{prefix},
+  .@{prefix} {
+    padding-left: @indent;
+
+    &--inline {
+      display: flex;
+    }
+
+    &--value-editing {
+      .@{prefix} {
+        &-label__paren {
+          display: none;
+        }
+
+        &-last__paren {
+          display: none;
+        }
+      }
+    }
+
+    &-label {
+      display: inline-block;
+      position: relative;
+
+      // REVIEW: 需要检查兼容性 👀
+      // display: flex;
+      // height: 1.5em;
+      // align-items: center;
+      // word-break: keep-all;
+
+      &--editable {
+        max-width: @label-width;
+      }
+
+      &__icon {
+        cursor: pointer;
+        margin-right: 5px;
+        position: absolute;
+        left: -1.5em;
+        color: @icon-color;
+      }
+
+      &__str {
+        color: @label-color;
+        // TODO:  props 控制
+        max-width: @label-width;
+        word-break: keep-all;
+        display: inline-block;
+        vertical-align: bottom;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &::before {
+          content: '"';
+        }
+
+        &::after {
+          content: '"';
+        }
+      }
+    }
+
+    &-value {
+      &--editable {
+        max-width: 800px;
+        vertical-align: text-top;
+      }
+
+      &__edit {
+        cursor: pointer;
+        color: @icon-color;
+        // display: none;
+      }
+
+      &--inline {
+        display: inline-block;
+      }
+
+      &--block {
+        border-left: 1px dashed #bbb;
+      }
+
+      &--collapsed {
+        // display: flex;
+        // display: inline-block;
+      }
+
+      &--string {
+        color: green;
+      }
+
+      &--number {
+        color: blue;
+      }
+      &--boolean {
+        color: darkorange;
+      }
+      &--null {
+        color: magenta;
+      }
+      &--undefined {
+        color: gray;
+      }
+    }
+
+    &-last {
+      &--inline {
+        display: inline-block;
+      }
+
+      &__icon {
+        cursor: pointer;
+        color: @icon-color;
+        margin-left: 8px;
+      }
+    }
+  }
+}
