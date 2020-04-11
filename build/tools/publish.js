@@ -18,7 +18,8 @@ const questions = [
     name: "pack",
     message: "用什么打包方式?",
     choices: [
-      { name: "自定义", value: "comp" },
+      { name: "无 webpack", value: "compile" },
+      { name: "自定义 webpack", value: "comp" },
       {
         name: "vue-cli3 库模式",
         value: "build:lib"
