@@ -92,13 +92,15 @@ gulp.task(
 );
 
 // 用于阻止一些行为
-// WARNING: 不能阻止yarn
 gulp.task(
   "guard",
   gulp.series(next => {
-    next("This action is not allowed");
+    const npmArgs = getNpmArgs();
 
-    // const npmArgs = getNpmArgs();
+    npmArgs && npmArgs.includes("--with-run-tools")
+      ? next()
+      : next("This action is not allowed");
+
     // if (npmArgs) {
     //   for (let arg = npmArgs.shift(); arg; arg = npmArgs.shift()) {
     //     if (
@@ -120,22 +122,27 @@ gulp.on("task_not_found", () => {
   console.log("没有该任务");
 });
 
-// function getNpmArgs() {
-//   let npmArgv = null;
+/**
+ * 获取 npm 指令的参数
+ *
+ * 注意: 由于某种兼容性问题, 无法获取到 yarn 传入的全部参数
+ */
+function getNpmArgs() {
+  let npmArgv = null;
 
-//   try {
-//     npmArgv = JSON.parse(process.env.npm_config_argv);
-//   } catch (err) {
-//     return null;
-//   }
+  try {
+    npmArgv = JSON.parse(process.env.npm_config_argv);
+  } catch (err) {
+    return null;
+  }
 
-//   if (
-//     typeof npmArgv !== "object" ||
-//     !npmArgv.cooked ||
-//     !Array.isArray(npmArgv.cooked)
-//   ) {
-//     return null;
-//   }
+  if (
+    typeof npmArgv !== "object" ||
+    !npmArgv.cooked ||
+    !Array.isArray(npmArgv.cooked)
+  ) {
+    return null;
+  }
 
-//   return npmArgv.cooked;
-// }
+  return npmArgv.cooked;
+}
