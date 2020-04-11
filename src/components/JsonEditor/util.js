@@ -17,7 +17,9 @@ export function getKeyLen(obj) {
 
   const arr = Object.values(obj);
 
-  return arr.reduce((acc, current) => acc + getKeyLen(current), arr.length);
+  const start = arr.length ? arr.length + 1 : 0;
+
+  return arr.reduce((acc, current) => acc + getKeyLen(current), start);
 }
 
 export function isPrimitive(value) {
@@ -34,19 +36,30 @@ export function isPrimitive(value) {
 export function renameKeyInObj(obj, oldKey, newKey) {
   if (isPrimitive(obj)) throw new TypeError("Object is required!");
 
+  // 判断有无 oldKey
+  if (!Object.prototype.hasOwnProperty.call(obj, oldKey)) return obj;
+
   if (!newKey) {
-    delete obj[oldKey];
+    // 数组 delete 其长度不变, 不符合预期
+    if (Array.isArray(obj)) {
+      obj.splice(oldKey, 1);
+    } else {
+      delete obj[oldKey];
+    }
 
     return refreshByDeconstruct(obj);
   }
 
-  return Object.keys(obj).reduce((acc, key) => {
-    if (key === oldKey) {
-      acc[newKey] = obj[key];
-    } else {
-      acc[key] = obj[key];
-    }
+  return Object.keys(obj).reduce(
+    (acc, key) => {
+      if (key === oldKey) {
+        acc[newKey] = obj[key];
+      } else {
+        acc[key] = obj[key];
+      }
 
-    return acc;
-  }, {});
+      return acc;
+    },
+    Array.isArray(obj) ? [] : {}
+  );
 }

@@ -119,7 +119,7 @@ export default {
           // // a: [1, 2, 3],
           d: { c: { a: [] } },
           b: false,
-          c: null
+          c: undefined
         },
         [1123]
       ],

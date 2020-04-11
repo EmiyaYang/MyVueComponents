@@ -47,7 +47,7 @@ export default {
       valueEditing: false,
       tmpLabel: "",
       tmpValue: "",
-      ifError: false
+      prompt: null
     };
   },
   computed: {
@@ -79,6 +79,17 @@ export default {
     }
   },
   methods: {
+    resetPrompt() {
+      this.prompt = null;
+    },
+
+    setPrompt(type, msg) {
+      this.prompt = {
+        type,
+        msg
+      };
+    },
+
     toggleCollapsed() {
       this.collapsed = !this.collapsed;
 
@@ -91,7 +102,8 @@ export default {
     },
 
     prepareValueEdit() {
-      this.isError = false;
+      this.setPrompt("info", "Enter 确定; ESC 退出编辑;");
+
       this.valueEditing = true;
 
       this.tmpValue = JSON.stringify(this.value, null, 4);
@@ -99,6 +111,20 @@ export default {
       this.$nextTick(() => {
         this.$refs.ValueEditor.$el.focus();
       });
+    },
+
+    prepareLabelEdit() {
+      this.labelEditing = true;
+      this.tmpLabel = this.jsonKey;
+
+      this.$nextTick(() => {
+        this.$refs.LabelEditor.$el.focus();
+        // this.$refs.LabelEditor.$el.children[0].focus();
+      });
+    },
+
+    handleDelete() {
+      this.$emit("update:jsonKey", "");
     },
 
     handleValueChange() {
@@ -118,9 +144,8 @@ export default {
       } catch (e) {
         // eslint-disable-next-line no-console
         console.warn(e);
-        this.isError = true;
-        // isError涉及视图更新
-        this.$forceUpdate();
+
+        this.setPrompt("error", "请输入有效的数据格式");
       }
     },
 
@@ -142,10 +167,10 @@ export default {
         );
       }
 
-      let expandIcon = "";
+      let ExpandIcon = "";
 
       if (!this.isEmpty) {
-        expandIcon = this.collapsed ? (
+        ExpandIcon = this.collapsed ? (
           <a-icon
             class="json-item-label__icon"
             type="caret-right"
@@ -159,6 +184,35 @@ export default {
           />
         );
       }
+      const ToolIcon = (
+        <a-dropdown>
+          <a-icon
+            class="json-item-label__tool"
+            type="unordered-list"
+            hidden={!this.valueEditable || this.valueEditing}
+          />
+          <a-menu slot="overlay">
+            {this.jsonKey && !this.$parent.isArray ? (
+              <a-menu-item>
+                <a href="javascript:;" onClick={this.prepareLabelEdit}>
+                  编辑 key
+                </a>
+              </a-menu-item>
+            ) : null}
+
+            <a-menu-item>
+              <a href="javascript:;" onClick={this.prepareValueEdit}>
+                编辑 value
+              </a>
+            </a-menu-item>
+            <a-menu-item>
+              <a href="javascript:;" onClick={this.handleDelete}>
+                删除
+              </a>
+            </a-menu-item>
+          </a-menu>
+        </a-dropdown>
+      );
 
       let jsonKey = this.jsonKey;
 
@@ -167,36 +221,27 @@ export default {
 
       return (
         <span class="json-item-label">
-          <span style="display: flex; align-items: center;">
-            {expandIcon}
-            {jsonKey != undefined ? (
-              <span>
-                <span
-                  class="json-item-label__str"
-                  onClick={() => {
-                    this.labelEditing = true;
-                    this.tmpLabel = this.jsonKey;
-
-                    this.$nextTick(() => {
-                      this.$refs.LabelEditor.$el.focus();
-                      // this.$refs.LabelEditor.$el.children[0].focus();
-                    });
-                  }}
-                >
-                  {jsonKey}
-                </span>
-                <span class="json-item-label__colon">:</span>
+          {ExpandIcon}
+          <span style="position: relative;">{ToolIcon}</span>
+          {jsonKey != undefined ? (
+            <span>
+              <span
+                class="json-item-label__str"
+                onClick={this.prepareLabelEdit}
+              >
+                {jsonKey}
               </span>
-            ) : (
-              <span style="width: 1px; display: inline-block;">&nbsp;</span>
-            )}
+              <span class="json-item-label__colon">:</span>
+            </span>
+          ) : null
+          // <span style="width: 1px; display: inline-block;">&nbsp;</span>
+          }
 
-            {!this.isEmpty && !this.isPrimitive ? (
-              <span class="json-item-label__paren">{this.parens[0]}</span>
-            ) : null}
+          {!this.isEmpty && !this.isPrimitive ? (
+            <span class="json-item-label__paren">{this.parens[0]}</span>
+          ) : null}
 
-            <span class="json-item-label__no"> {this.startLineNo} </span>
-          </span>
+          <span class="json-item-label__no"> {this.startLineNo} </span>
         </span>
       );
     },
@@ -218,9 +263,14 @@ export default {
               }}
             />
 
-            {this.isError ? (
-              <section class="json-item-value__error">
-                请输入有效的数据格式
+            {this.prompt ? (
+              <section
+                class={[
+                  "json-item-value__prompt",
+                  `json-item-value__prompt--${this.prompt.type}`
+                ]}
+              >
+                {this.prompt.msg}
               </section>
             ) : null}
           </section>
@@ -230,7 +280,6 @@ export default {
       const classes = [
         "json-item-value",
         `json-item-value--${this.type}`,
-        `json-item-value--${this.collapsed ? "collapsed" : "open"}`,
         this.isPrimitive || this.isEmpty || this.collapsed
           ? "json-item-value--inline"
           : "json-item-value--block"
@@ -287,6 +336,8 @@ export default {
                       },
                       // 仅处理对象
                       "update:jsonKey": newKey => {
+                        console.log(renameKeyInObj(this.value, key, newKey));
+
                         this.$emit(
                           "change",
                           renameKeyInObj(this.value, key, newKey)
@@ -312,23 +363,23 @@ export default {
               : ""
           ]}
         >
-          {/* {!this.isEmpty && !this.isPrimitive ? (
+          {!this.isEmpty && !this.isPrimitive && !this.valueEditing ? (
             <span class="json-item-last__no">
-              {this.startLineNo + getKeyLen(this.value) + 1}
+              {this.startLineNo + getKeyLen(this.value)}
             </span>
-          ) : null} */}
+          ) : null}
 
           <span class="json-item-last__paren">
             {!this.isEmpty && !this.isPrimitive ? this.parens[1] : null}
           </span>
 
           {this.isLast ? null : <span>,</span>}
-          <a-icon
+          {/* <a-icon
             class="json-item-last__icon"
             type="edit"
             hidden={!this.valueEditable}
             onClick={this.prepareValueEdit}
-          />
+          /> */}
         </section>
       );
     }
@@ -364,6 +415,7 @@ export default {
         class={[
           this.jsonKey ? "" : "json-editor-container",
           "json-item",
+          `json-item--${this.collapsed ? "collapsed" : "open"}`,
           this.valueEditing ? "json-item--value-editing" : "",
           this.isEmpty || this.isPrimitive || this.collapsed
             ? "json-item--inline"
