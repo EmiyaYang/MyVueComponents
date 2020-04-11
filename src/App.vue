@@ -26,7 +26,9 @@
 
     <h1>Promodal</h1>
     <a-button @click="modalVisible = true">Call</a-button>
-    <ProModal v-model="modalVisible" />
+    <ProModal v-model="modalVisible">
+      <JsonEditor v-model="jsonData" />
+    </ProModal>
   </div>
 </template>
 
@@ -36,8 +38,8 @@
 import ProTable from "./components/ProTable/index";
 import ChartsPane from "./components/ChartsPane";
 import ProModal from "./components/ProModal";
-// import JsonEditor from "./components/JsonEditor";
-import JsonEditor from "../lib/JsonEditor";
+import JsonEditor from "./components/JsonEditor";
+// import JsonEditor from "../lib/JsonEditor";
 import JsonViewer from "./components/JsonViewer";
 import "./components/style";
 

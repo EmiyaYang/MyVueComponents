@@ -264,6 +264,8 @@ export default {
               vModel={this.tmpValue}
               autoSize={{ minRows: 1, maxRows: 5 }}
               onKeydown={e => {
+                e.stopPropagation();
+
                 if (e.code === "Enter") {
                   this.handleValueChange();
                   e.preventDefault();
@@ -271,6 +273,15 @@ export default {
                 }
               }}
             />
+
+            <span
+              class="json-item-value__cancel"
+              onClick={() => {
+                this.valueEditing = false;
+              }}
+            >
+              ×
+            </span>
 
             {this.prompt ? (
               <section

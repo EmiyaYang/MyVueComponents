@@ -18,6 +18,8 @@
 
     &--inline {
       display: flex;
+      // textarea 下面出现提示占空间
+      align-items: baseline;
     }
 
     &--collapsed {
@@ -100,8 +102,17 @@
 
     &-value {
       &--editable {
-        max-width: 800px;
+        max-width: 600px;
         vertical-align: text-top;
+        position: relative;
+      }
+
+      &__cancel {
+        position: absolute;
+        right: 5px;
+        top: 0;
+        font-size: 16px;
+        cursor: pointer;
       }
 
       &__prompt {
