@@ -96,21 +96,23 @@ gulp.task(
 gulp.task(
   "guard",
   gulp.series(next => {
-    const npmArgs = getNpmArgs();
-    if (npmArgs) {
-      for (let arg = npmArgs.shift(); arg; arg = npmArgs.shift()) {
-        if (
-          /^pu(b(l(i(sh?)?)?)?)?$/.test(arg) &&
-          // /^lint$/.test(arg) &&
-          npmArgs.indexOf("--with-run-tools") < 0
-        ) {
-          next(1);
-          return;
-        }
-      }
-    }
+    next("This action is not allowed");
 
-    next();
+    // const npmArgs = getNpmArgs();
+    // if (npmArgs) {
+    //   for (let arg = npmArgs.shift(); arg; arg = npmArgs.shift()) {
+    //     if (
+    //       /^pu(b(l(i(sh?)?)?)?)?$/.test(arg) &&
+    //       // /^lint$/.test(arg) &&
+    //       npmArgs.indexOf("--with-run-tools") < 0
+    //     ) {
+    //       next(1);
+    //       return;
+    //     }
+    //   }
+    // }
+
+    // next();
   })
 );
 
@@ -118,22 +120,22 @@ gulp.on("task_not_found", () => {
   console.log("没有该任务");
 });
 
-function getNpmArgs() {
-  let npmArgv = null;
+// function getNpmArgs() {
+//   let npmArgv = null;
 
-  try {
-    npmArgv = JSON.parse(process.env.npm_config_argv);
-  } catch (err) {
-    return null;
-  }
+//   try {
+//     npmArgv = JSON.parse(process.env.npm_config_argv);
+//   } catch (err) {
+//     return null;
+//   }
 
-  if (
-    typeof npmArgv !== "object" ||
-    !npmArgv.cooked ||
-    !Array.isArray(npmArgv.cooked)
-  ) {
-    return null;
-  }
+//   if (
+//     typeof npmArgv !== "object" ||
+//     !npmArgv.cooked ||
+//     !Array.isArray(npmArgv.cooked)
+//   ) {
+//     return null;
+//   }
 
-  return npmArgv.cooked;
-}
+//   return npmArgv.cooked;
+// }
