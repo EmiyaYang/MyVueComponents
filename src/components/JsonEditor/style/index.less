@@ -108,11 +108,23 @@
       }
 
       &__cancel {
+        opacity: 0;
         position: absolute;
         right: 5px;
         top: 0;
         font-size: 16px;
         cursor: pointer;
+        color: @icon-color;
+      }
+
+      &:hover {
+        > .@{prefix} {
+          &-value {
+            &__cancel {
+              opacity: 1;
+            }
+          }
+        }
       }
 
       &__prompt {
@@ -135,6 +147,8 @@
 
       &--inline {
         display: inline-block;
+        // 行内属性允许直接点击编辑
+        cursor: pointer;
       }
 
       &--block {

@@ -228,7 +228,7 @@ export default {
       return (
         <span class="json-item-label">
           {ExpandIcon}
-          <span style="position: relative;">
+          <span style="position: relative;  display: inline-block; width: 0.01px;">
             &nbsp;
             {ToolIcon}
           </span>
@@ -264,8 +264,6 @@ export default {
               vModel={this.tmpValue}
               autoSize={{ minRows: 1, maxRows: 5 }}
               onKeydown={e => {
-                e.stopPropagation();
-
                 if (e.code === "Enter") {
                   this.handleValueChange();
                   e.preventDefault();
@@ -312,12 +310,20 @@ export default {
             ? `"${this.value}"`
             : this.value?.toString() || this.type;
 
-        return <span class={classes}>{data}</span>;
+        return (
+          <span class={classes} onClick={this.prepareValueEdit}>
+            {data}
+          </span>
+        );
       }
 
       // 处理空索引值
       if (this.isEmpty)
-        return <span class={classes}>{this.parens.join("")}</span>;
+        return (
+          <span class={classes} onClick={this.prepareValueEdit}>
+            {this.parens.join("")}
+          </span>
+        );
 
       const arr = Object.keys(this.value);
 
@@ -407,6 +413,8 @@ export default {
   },
   created() {
     const listener = document.addEventListener("keydown", e => {
+      e.stopPropagation();
+
       if (e.code === "Escape") {
         this.valueEditing = false;
         this.labelEditing = false;
