@@ -3,6 +3,7 @@
 @label-color: #956f38;
 @indent: 2rem;
 @prefix: json-item;
+@line-number-color: grey;
 
 .json-editor-container {
   position: relative;
@@ -13,10 +14,10 @@
   &.@{prefix},
   .@{prefix} {
     padding-left: @indent;
+    // line-height: 1.5 !important;
 
     &--inline {
       display: flex;
-      line-height: 1.5;
     }
 
     &--collapsed {
@@ -42,7 +43,9 @@
     }
 
     &-label {
-      display: inline-block;
+      display: flex;
+      align-items: center;
+
       cursor: pointer;
 
       &--editable {
@@ -50,22 +53,19 @@
       }
 
       &__icon {
-        // REVIEW: 图标高度对齐
-        line-height: 2;
-
         cursor: pointer;
         margin-right: 5px;
         position: absolute;
         left: 2em;
-        color: @icon-color;
+        color: fade(@icon-color, "50%");
       }
 
       &__tool {
-        // REVIEW: 图标高度对齐
-        line-height: 2;
         cursor: pointer;
         position: absolute;
         left: -1.5em;
+        top: 50%;
+        transform: translateY(-50%);
         color: @icon-color;
       }
 
@@ -94,6 +94,7 @@
         width: 2em;
         text-align: right;
         left: 0;
+        color: @line-number-color;
       }
     }
 
@@ -154,6 +155,7 @@
         width: 2em;
         text-align: right;
         left: 0;
+        color: @line-number-color;
       }
 
       &--inline {

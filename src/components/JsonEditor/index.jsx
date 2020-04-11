@@ -35,6 +35,10 @@ export default {
     startLineNo: {
       type: Number,
       default: 1
+    },
+    readOnly: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -100,6 +104,8 @@ export default {
     },
 
     prepareValueEdit() {
+      if (this.readOnly) return;
+
       this.setPrompt("info", "Enter 确定; ESC 退出编辑;");
 
       this.valueEditing = true;
@@ -112,6 +118,8 @@ export default {
     },
 
     prepareLabelEdit() {
+      if (this.readOnly) return;
+
       this.labelEditing = true;
       this.tmpLabel = this.jsonKey;
 
@@ -187,7 +195,7 @@ export default {
           <a-icon
             class="json-item-label__tool"
             type="unordered-list"
-            hidden={!this.valueEditable || this.valueEditing}
+            hidden={!this.valueEditable || this.valueEditing || this.readOnly}
           />
           <a-menu slot="overlay">
             {this.jsonKey && !this.$parent.isArray ? (
@@ -220,7 +228,10 @@ export default {
       return (
         <span class="json-item-label">
           {ExpandIcon}
-          <span style="position: relative;">{ToolIcon}</span>
+          <span style="position: relative;">
+            &nbsp;
+            {ToolIcon}
+          </span>
           {jsonKey != undefined ? (
             <span>
               <span
@@ -325,6 +336,7 @@ export default {
                   jsonKey={key}
                   isLast={index === arr.length - 1}
                   startLineNo={startLineNo}
+                  readOnly={this.readOnly}
                   {...{
                     on: {
                       change: value => {
