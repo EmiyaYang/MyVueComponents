@@ -37,12 +37,15 @@ inquirer.prompt(questions).then(answer => {
   // TODO: 检测git工作树, 如未清空则自动生成提交
 
   try {
-    execSync(`yarn ${pack}`, { stdio: "inherit" });
+    execSync(`yarn ${pack}`, { stdio: "inherit", encoding: "utf8" });
 
     // 发布前要清空工作树, 这个错误被捕获但没有打印出日志
-    execSync(`npm version ${level}`, { stdio: "inherit" });
+    execSync(`npm version ${level}`, { stdio: "inherit", encoding: "utf8" });
 
-    execSync("npm publish --with-run-tools", { stdio: "inherit" });
+    execSync("npm publish --with-run-tools", {
+      stdio: "inherit",
+      encoding: "utf8"
+    });
 
     console.log("发布成功!");
   } catch (e) {
