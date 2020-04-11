@@ -97,6 +97,8 @@ gulp.task(
   gulp.series(next => {
     const npmArgs = getNpmArgs();
 
+    console.log(npmArgs);
+
     npmArgs && npmArgs.includes("--with-run-tools")
       ? next()
       : next("This action is not allowed");
