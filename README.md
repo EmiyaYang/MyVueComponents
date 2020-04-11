@@ -1,5 +1,7 @@
 # @emiya/vue-components
 
+[![NPM Version](https://img.shields.io/npm/v/@emiya/vue-component.svg)](https://www.npmjs.com/package/@emiya/vue-component)
+
 ## 适用性说明
 
 本组件库没有用 webpack 进行打包, 仅适用于具备相应构建能力的 vue 栈项目, 且需要导入了 `ant-design-vue` 作为前置依赖.

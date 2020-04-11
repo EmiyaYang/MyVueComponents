@@ -8,7 +8,8 @@ const getBabelCommonConfig = require("./getBabelCommonConfig");
 const cwd = process.cwd();
 const libDir = path.join(cwd, "lib");
 // const esDir = path.join(cwd, "es");
-const less = require("gulp-less");
+// const less = require("gulp-less");
+const transformLess = require("./transformLess");
 
 function compile() {
   // rm -rf
@@ -18,17 +19,24 @@ function compile() {
     .src(["src/components/**/*.@(png|svg)"])
     .pipe(gulp.dest(libDir));
 
-  // copy
-  const lessStream = gulp
-    .src(["src/components/**/*.less"])
-    .pipe(gulp.dest(libDir));
-
-  // less 2 css
-  const cssStream = gulp
+  const styleStream = gulp
     .src(["src/components/**/*.less"])
     .pipe(
-      less({
-        // paths: [path.join(__dirname, "node_modules")]
+      through2.obj(function(file, encoding, next) {
+        // 拷贝一份 less 不做变动
+        this.push(file.clone());
+        if (file.path.match(/\/style\/index\.less$/)) {
+          transformLess(file.path)
+            .then(css => {
+              file.contents = Buffer.from(css);
+              file.path = file.path.replace(/\.less$/, ".css");
+              this.push(file);
+              next();
+            })
+            .catch(console.warn);
+        } else {
+          next();
+        }
       })
     )
     .pipe(gulp.dest(libDir));
@@ -36,7 +44,6 @@ function compile() {
   const jsFilesStream = babelify(
     gulp.src([
       "src/components/index.js",
-      "src/components/style.js",
       "src/components/**/*.js",
       "src/components/**/*.jsx",
       "!src/components/*/__tests__/*"
@@ -44,7 +51,7 @@ function compile() {
   );
 
   // Merge multiple streams into one stream in sequence or parallel.
-  return merge2([jsFilesStream, assetsStream, lessStream, cssStream]);
+  return merge2([jsFilesStream, assetsStream, styleStream]);
 }
 
 function babelify(js) {
@@ -55,7 +62,7 @@ function babelify(js) {
   //   babelConfig.plugins.push(replaceLib);
   // }
   const stream = js.pipe(babel(babelConfig)).pipe(
-    through2.obj(function z(file, encoding, next) {
+    through2.obj(function(file, encoding, next) {
       this.push(file.clone());
 
       if (file.path.match(/\/style\/index\.(js|jsx)$/)) {
