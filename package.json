@@ -11,7 +11,7 @@
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "comp": "webpack --config ./build/webpack.config.js",
-    "compile": "node ./build/run.js",
+    "compile": "node ./build/run.js compile",
     "pub": "node ./build/tools/publish.js",
     "prepublish": "node ./build/run.js guard"
   },

@@ -1,5 +1,3 @@
-import "./index.less";
-
 // eslint-disable-next-line no-unused-vars
 import {
   refreshByDeconstruct,
