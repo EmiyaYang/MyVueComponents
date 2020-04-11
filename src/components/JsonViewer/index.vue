@@ -327,12 +327,6 @@ export default {
 };
 </script>
 <style scoped lang="less">
-// @import './style/index';
-// @import './style/on-dark';
-// @import './style/vs-code';
-
-// default
-
 .json-view-container {
   background-color: #fff;
   text-align: left;

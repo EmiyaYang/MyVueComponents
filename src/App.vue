@@ -36,10 +36,10 @@
 import ProTable from "./components/ProTable/index";
 import ChartsPane from "./components/ChartsPane";
 import ProModal from "./components/ProModal";
-import JsonEditor from "./components/JsonEditor";
+// import JsonEditor from "./components/JsonEditor";
+import JsonEditor from "../lib/JsonEditor";
 import JsonViewer from "./components/JsonViewer";
-// import JsonEditor from "../lib/JsonEditor";
-import "./components/style.js";
+import "./components/style";
 
 const getPieOptions = () => {
   return {

@@ -8,6 +8,7 @@ const getBabelCommonConfig = require("./getBabelCommonConfig");
 const cwd = process.cwd();
 const libDir = path.join(cwd, "lib");
 // const esDir = path.join(cwd, "es");
+const less = require("gulp-less");
 
 function compile() {
   // rm -rf
@@ -17,8 +18,19 @@ function compile() {
     .src(["src/components/**/*.@(png|svg)"])
     .pipe(gulp.dest(libDir));
 
+  // copy
   const lessStream = gulp
     .src(["src/components/**/*.less"])
+    .pipe(gulp.dest(libDir));
+
+  // less 2 css
+  const cssStream = gulp
+    .src(["src/components/**/*.less"])
+    .pipe(
+      less({
+        // paths: [path.join(__dirname, "node_modules")]
+      })
+    )
     .pipe(gulp.dest(libDir));
 
   const jsFilesStream = babelify(
@@ -32,7 +44,7 @@ function compile() {
   );
 
   // Merge multiple streams into one stream in sequence or parallel.
-  return merge2([jsFilesStream, assetsStream, lessStream]);
+  return merge2([jsFilesStream, assetsStream, lessStream, cssStream]);
 }
 
 function babelify(js) {
@@ -42,23 +54,22 @@ function babelify(js) {
   // if (modules === false) {
   //   babelConfig.plugins.push(replaceLib);
   // }
-  let stream = js.pipe(babel(babelConfig)).pipe(
+  const stream = js.pipe(babel(babelConfig)).pipe(
     through2.obj(function z(file, encoding, next) {
       this.push(file.clone());
+
+      if (file.path.match(/\/style\/index\.(js|jsx)$/)) {
+        const content = file.contents.toString(encoding);
+        file.contents = Buffer.from(
+          content
+            .replace(/\/style\/?'/g, "/style/css'")
+            .replace(/\.less/g, ".css")
+        );
+        file.path = file.path.replace(/index\.(js|jsx)$/, "css.js");
+        this.push(file);
+      }
+
       next();
-      // if (file.path.match(/\/style\/index\.(js|jsx)$/)) {
-      //   const content = file.contents.toString(encoding);
-      //   file.contents = Buffer.from(
-      //     content
-      //       // .replace(/\/style\/?'/g, "/style/css'")
-      //       .replace(/\.less/g, ".css")
-      //   );
-      //   file.path = file.path.replace(/index\.(js|jsx)$/, "css.js");
-      //   this.push(file);
-      //   next();
-      // } else {
-      //   next();
-      // }
     })
   );
   return stream.pipe(gulp.dest(libDir));

@@ -45,6 +45,7 @@
     "geckodriver": "^1.19.1",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
+    "gulp-less": "^4.0.1",
     "gulp-strip-code": "^0.1.4",
     "inquirer": "^7.1.0",
     "jsdom": "^16.2.2",

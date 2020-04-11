@@ -2,7 +2,7 @@
 
 ## 适用性说明
 
-本组件库没有用 webpack 进行打包, 仅适用于具备相应构建能力的 vue 栈项目, 且需要导入了 `ant-design-vue`, `less-loader` 作为前置依赖.
+本组件库没有用 webpack 进行打包, 仅适用于具备相应构建能力的 vue 栈项目, 且需要导入了 `ant-design-vue` 作为前置依赖.
 
 ## import
 
@@ -17,18 +17,19 @@ yarn add @emiya/vue-components
 ```js
 // 按需导入
 import ProTable from "@emiya/vue-component/lib/ProTable";
-import "@emiya/vue-component/lib/ProTable/style";
+import "@emiya/vue-component/lib/ProTable/style/index.css";
 
-// 全部导入
+// 如需进行样式变量覆盖则请相应 less 文件
+import "@emiya/vue-component/lib/ProTable/style/index.less";
+
+// 导入全部组件
 import { ProTable } from "@emiya/vue-component";
-import "@emiya/vue-component/style";
-```
 
-```js
-// webpack
-resolve: {
-  extensions: [".js", ".jsx", ".less", ".css"];
-}
+// 导入全部 less
+import "@emiya/vue-component/style";
+
+// 导入全部 css
+import "@emiya/vue-component/style/css.js";
 ```
 
 ## 组件概览
