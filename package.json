@@ -1,6 +1,6 @@
 {
   "name": "@emiya/vue-component",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "main": "lib/index.js",
   "scripts": {
     "serve": "vue-cli-service serve",
