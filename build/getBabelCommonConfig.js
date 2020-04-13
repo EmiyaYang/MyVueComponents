@@ -7,7 +7,13 @@ module.exports = function(modules) {
     require.resolve("@vue/babel-plugin-transform-vue-jsx")
   ];
   plugins.push([
-    require.resolve("@babel/plugin-transform-runtime")
+    require.resolve("@babel/plugin-transform-runtime"),
+    {
+      corejs: false,
+      helpers: true,
+      regenerator: true,
+      useESModules: false
+    }
     // The @babel/runtime module now skips polyfilling by default
     // {
     //   polyfill: false
